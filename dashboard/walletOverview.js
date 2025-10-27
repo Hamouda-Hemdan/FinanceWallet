@@ -41,13 +41,11 @@ function setupCustomSelect(wrapperId, optionsArray) {
   });
 }
 
-// Example usage: populate dropdowns (replace with API fetch later)
 document.addEventListener("DOMContentLoaded", () => {
   setupCustomSelect("currency-wrapper", currencies);
   setupCustomSelect("wallet-wrapper", walletTypes);
 });
 
-// --- Form submission ---
 walletForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const name = document.getElementById("wallet-name").value;
@@ -89,17 +87,14 @@ async function fetchWalletBalances() {
     const totalBalance = result.data?.totalBalance ?? 0;
     const wallets = result.data?.walletBalances ?? [];
 
-    // Update "My Balance" card
     const myBalanceCard = document.querySelector(
       ".overview-section .card:nth-child(1) h2"
     );
     myBalanceCard.textContent = `$${totalBalance.toLocaleString()}`;
 
-    // Find Savings Account wallet
     const savingsWallet = wallets.find((w) => w.walletType === "Savings");
     const savingsBalance = savingsWallet?.balance ?? 0;
 
-    // Update "Savings Account" card
     const savingsCard = document.querySelector(
       ".overview-section .card:nth-child(2) h2"
     );
@@ -110,7 +105,6 @@ async function fetchWalletBalances() {
   }
 }
 
-// Set initial loading state
 document.addEventListener("DOMContentLoaded", () => {
   const cards = document.querySelectorAll(".overview-section .card h2");
   cards.forEach((card) => (card.textContent = "Loading..."));
@@ -120,7 +114,6 @@ async function loadEnums() {
   try {
     const token = localStorage.getItem("token");
 
-    // --- Load Currency Types ---
     const currencyResponse = await fetch(
       `${CONFIG.BASE_URL}api/enums/currency-types`,
       {
@@ -139,9 +132,9 @@ async function loadEnums() {
     }
 
     const currencyResult = await currencyResponse.json();
-    const currencies = currencyResult.data; // Array of { value, name }
+    const currencies = currencyResult.data;
     const currencySelect = document.getElementById("currency");
-    currencySelect.innerHTML = ""; // Clear existing options
+    currencySelect.innerHTML = "";
     currencies.forEach((c) => {
       const option = document.createElement("option");
       option.value = c.value;
@@ -149,7 +142,6 @@ async function loadEnums() {
       currencySelect.appendChild(option);
     });
 
-    // --- Load Wallet Types ---
     const walletTypeResponse = await fetch(
       `${CONFIG.BASE_URL}api/enums/wallet-types`,
       {
@@ -168,9 +160,9 @@ async function loadEnums() {
     }
 
     const walletTypeResult = await walletTypeResponse.json();
-    const walletTypes = walletTypeResult.data; // Array of { value, name }
+    const walletTypes = walletTypeResult.data;
     const walletTypeSelect = document.getElementById("wallet-type");
-    walletTypeSelect.innerHTML = ""; // Clear existing options
+    walletTypeSelect.innerHTML = "";
     walletTypes.forEach((w) => {
       const option = document.createElement("option");
       option.value = w.value;
@@ -182,7 +174,6 @@ async function loadEnums() {
   }
 }
 
-// Call this function when DOM is ready or when opening the popup
 document.addEventListener("DOMContentLoaded", loadEnums);
 walletForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -192,10 +183,14 @@ walletForm.addEventListener("submit", async (e) => {
   const walletType = document.getElementById("wallet-type").value;
   const balance = parseFloat(document.getElementById("balance").value);
 
+  if (isNaN(balance) || balance < 1) {
+    alert("You should enter a balance greater than or equal to 1.");
+    return;
+  }
   const walletData = { name, currency, walletType, balance };
 
   try {
-    const token = localStorage.getItem("token"); // Or wherever your JWT is stored
+    const token = localStorage.getItem("token");
 
     const response = await fetch(`${CONFIG.BASE_URL}wallets`, {
       method: "POST",
@@ -216,13 +211,10 @@ walletForm.addEventListener("submit", async (e) => {
     const result = await response.json();
     console.log("Wallet created:", result);
 
-    // Optionally, refresh the wallet balances
     fetchWalletBalances();
 
-    // Close the popup
     walletPopup.style.display = "none";
 
-    // Reset form
     walletForm.reset();
   } catch (error) {
     console.error("Error creating wallet:", error);
