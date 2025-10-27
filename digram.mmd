@@ -1,0 +1,12 @@
+sequenceDiagram
+    participant U as User
+    participant FE as Frontend (Web App)
+    participant BE as Backend (API)
+    participant DB as Database
+
+    U->>FE: Opens page / Requests data
+    FE->>BE: Sends HTTP GET /api/data
+    BE->>DB: Queries data from database
+    DB-->>BE: Returns data (JSON)
+    BE-->>FE: Sends API response (JSON)
+    FE-->>U: Renders data on UI
