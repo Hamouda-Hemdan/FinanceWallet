@@ -1,0 +1,190 @@
+.login-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+  background: #ddd;
+  border-radius: 30px;
+  overflow: hidden;
+  margin: 80px auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.welcome {
+  flex: 1;
+  min-width: 300px;
+  background: #4c2824;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.welcome h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.welcome h2 {
+  font-size: 1rem;
+  color: #d3d3d3;
+}
+
+form {
+  flex: 1;
+  min-width: 300px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+  padding: 50px 40px;
+}
+input[type="email"],
+input[type="text"],
+input[type="password"] {
+  padding: 14px 20px;
+  border-radius: 40px;
+  border: 2px solid #4c2824;
+  outline: none;
+  width: 100%;
+  font-size: 15px;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+button {
+  padding: 12px;
+  border-radius: 40px;
+  border: none;
+  background-color: #4c2824;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #36201c;
+}
+
+.form-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.form-extra .remember {
+  display: flex;
+  align-items: center;
+}
+
+.form-extra .remember input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.form-extra .forgot-password {
+  color: #4c2824;
+  text-decoration: none;
+}
+
+.form-extra .forgot-password:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .welcome,
+  form {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .welcome {
+    padding: 60px 20px;
+  }
+
+  form {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .welcome h1 {
+    font-size: 1.5rem;
+  }
+
+  .welcome h2 {
+    font-size: 0.9rem;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}
+
+button:hover {
+  background-color: #36201c;
+}
+
+.form-extra {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 290px;
+  font-size: 12px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.form-extra .remember {
+  display: flex;
+  align-items: center;
+}
+
+.form-extra .remember input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.form-extra .forgot-password {
+  color: #4c2824;
+  text-decoration: none;
+}
+
+.form-extra .forgot-password:hover {
+  text-decoration: underline;
+}
+
+#password-strength {
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  width: 10%;
+  padding: 4px 10px;
+}
+
+#password-strength.weak {
+  color: red;
+}
+
+#password-strength.medium {
+  color: orange;
+}
+#password-strength.strong {
+  color: green;
+}

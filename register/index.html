@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="../Navbar.css" />
+    <link rel="stylesheet" href="/login/style.css" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <ul class="menu">
+        <li><a href=" ../index.html">Home</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="../login/index.html">Login</a></li>
+        <li><a href="#" class="active">Register</a></li>
+      </ul>
+    </div>
+    <div class="login-container">
+      <div class="welcome">
+        <h1>Hello,<br />Create Your Account!</h1>
+        <h2>by koko w momo w hoho</h2>
+      </div>
+      <form>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email"
+          autocomplete="off"
+          required
+        />
+        <input type="text" id="phone" name="Name" placeholder="Name" required />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="new-password"
+          required
+        />
+        <input
+          type="password"
+          id="confirm-password"
+          name="confirm-password"
+          placeholder="Confirm Password"
+          autocomplete="new-password"
+          required
+        />
+        <div class="form-extra">
+          <label class="remember">
+            <input type="checkbox" name="agree" /> I agree to Terms
+          </label>
+          <a href="../login/index.html" class="forgot-password"
+            >Already have an account?</a
+          >
+        </div>
+        <button type="submit">Register</button>
+      </form>
+    </div>
+    <script src="script.js"></script>
+    <script src="../config.js"></script>
+  </body>
+</html>

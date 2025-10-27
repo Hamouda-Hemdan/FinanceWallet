@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-user">
+        <img
+          id="sidebar-avatar"
+          src="../assets/avatar.jpg"
+          alt="User"
+          class="avatar"
+        />
+        <h4 id="sidebar-name">User Name</h4>
+        <p id="sidebar-email">user@email.com</p>
+      </div>
+      <ul class="menu">
+        <li><a href="../dashboard/index.html">Dashboard</a></li>
+        <li><a href="index.html" class="active">Profile</a></li>
+        <li><a href="#">Expenses</a></li>
+        <li><a href="#">Wallets</a></li>
+        <li><a href="#">Summary</a></li>
+        <li><a href="#">Accounts</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </div>
+
+    <div class="profile-container">
+      <h1 class="profile-title">Profile</h1>
+
+      <div class="profile-header">
+        <div class="user-info">
+          <div class="user-avatar">
+            <img
+              id="profile-avatar"
+              src="../assets/avatar.jpg"
+              alt="User Avatar"
+            />
+          </div>
+          <div>
+            <h2 id="profile-name">User Name</h2>
+            <p id="profile-job" class="subtitle">Occupation</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat">
+          <p>Total Balance</p>
+          <h3 id="total-balance">$0.00</h3>
+        </div>
+        <div class="stat">
+          <p>Total Wallets</p>
+          <h3 id="total-wallets">0</h3>
+        </div>
+        <div class="stat">
+          <p>Total Savings</p>
+          <h3 id="total-savings">$0.00</h3>
+        </div>
+      </div>
+
+      <div class="profile-info-section">
+        <div class="profile-details">
+          <div class="section-header">
+            <h3>Profile Details</h3>
+            <a href="#" class="edit-link">Edit Profile</a>
+          </div>
+          <div class="details">
+            <p>
+              <strong>Name Surname:</strong>
+              <span id="detail-name">User Name</span>
+            </p>
+            <p>
+              <strong>Email:</strong>
+              <a id="detail-email" href="#" style="color: #000000"
+                >user@email.com</a
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="login-history">
+          <div class="section-header">
+            <h3>Login History</h3>
+            <span class="subtext">Last 5 processes</span>
+          </div>
+          <ul id="login-history-list">
+            <li>Loading...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Popup -->
+    <div id="edit-popup" class="popup-overlay" style="display: none">
+      <div class="popup-content">
+        <h3>Edit Profile</h3>
+        <form id="edit-profile-form">
+          <label for="edit-name">Name</label>
+          <input type="text" id="edit-name" required />
+
+          <label for="edit-email">Email</label>
+          <input type="email" id="edit-email" required />
+
+          <div class="popup-buttons">
+            <button type="submit">Save</button>
+            <button type="button" id="cancel-popup">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="editProfile.js"></script>
+    <script src="balance.js"></script>
+    <script src="../config.js"></script>
+  </body>
+</html>

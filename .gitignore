@@ -1,0 +1,3 @@
+# Ignore config file (keeps your local settings private)
+config.js
+.env
