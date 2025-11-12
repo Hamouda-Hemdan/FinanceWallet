@@ -183,8 +183,8 @@ walletForm.addEventListener("submit", async (e) => {
   const walletType = document.getElementById("wallet-type").value;
   const balance = parseFloat(document.getElementById("balance").value);
 
-  if (isNaN(balance) || balance < 1) {
-    alert("You should enter a balance greater than or equal to 1.");
+  if (isNaN(balance) || balance < 0) {
+    alert("You should enter a balance greater than 0.");
     return;
   }
   const walletData = { name, currency, walletType, balance };

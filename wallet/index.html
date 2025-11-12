@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wallets</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-user">
+        <a href="../profile/index.html">
+          <img src="../assets/avatar.jpg" alt="User" class="avatar" />
+        </a>
+        <h4 id="sidebar-name">User Name</h4>
+        <p id="sidebar-email">user@email.com</p>
+      </div>
+      <ul class="menu">
+        <li><a href="../dashboard/index.html">Dashboard</a></li>
+        <li><a href="../profile/index.html">Profile</a></li>
+        <li><a href="#">Expenses</a></li>
+        <li><a href="#" class="active">Wallets</a></li>
+        <li><a href="#">Summary</a></li>
+        <li><a href="#">Accounts</a></li>
+        <li><a href="#">Settings</a></li>
+        <li><a href="#" id="logout-btn">Logout</a></li>
+      </ul>
+    </div>
+
+    <div class="wallet-container">
+      <h1 class="wallet-title">Wallets</h1>
+      <div class="wallet-grid" id="wallet-grid"></div>
+
+      <!-- Popup Overlay -->
+      <div class="popup-overlay" id="wallet-popup">
+        <div class="popup-content">
+          <h3 id="popup-wallet-name">Wallet Details</h3>
+          <p><strong>Name:</strong> <input type="text" id="popup-name" /></p>
+          <p>
+            <strong>Balance:</strong>
+            <input type="number" id="popup-balance-input" />
+          </p>
+          <p>
+            <strong>Currency:</strong>
+            <select id="popup-currency-select"></select>
+          </p>
+          <p>
+            <strong>Type:</strong>
+            <select id="popup-type-select"></select>
+          </p>
+          <p><strong>Created At:</strong> <span id="popup-created"></span></p>
+          <div class="popup-buttons">
+            <button id="save-wallet">Save</button>
+            <button id="close-popup">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="../profile/script.js"></script>
+    <script src="../config.js"></script>
+  </body>
+</html>

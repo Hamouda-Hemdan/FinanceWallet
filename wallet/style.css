@@ -1,0 +1,253 @@
+.wallet-container {
+  background-color: #d9d9d9;
+  border-radius: 40px;
+  margin: 30px;
+  padding: 40px;
+  flex: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wallet-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  width: 100%;
+}
+
+.wallet-card {
+  background: #cfcfcf;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.wallet-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+.wallet-name {
+  font-size: 20px;
+  color: #592b22;
+  margin-bottom: 10px;
+}
+
+.wallet-balance,
+.wallet-currency,
+.wallet-type {
+  margin: 5px 0;
+  color: #333;
+}
+
+.wallet-balance span,
+.wallet-currency span,
+.wallet-type span {
+  font-weight: 600;
+  color: #4a1f1b;
+}
+
+.wallet-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.wallet-actions button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #f0ad4e;
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background-color: #ec971f;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background-color: #d9534f;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #c9302c;
+  transform: translateY(-2px);
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(50, 50, 50, 0.5);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
+}
+
+.popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup-content {
+  background-color: #f2f2f2;
+  border-radius: 25px;
+  padding: 40px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+  animation: popup-slide-in 0.3s ease forwards;
+}
+
+.popup-content h3 {
+  font-size: 26px;
+  color: #592b22;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.popup-content p {
+  font-size: 16px;
+  margin: 10px 0;
+  color: #333;
+}
+
+.popup-content p span {
+  font-weight: 600;
+  color: #4a1f1b;
+}
+
+.popup-content input,
+.popup-content select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.popup-content input:focus,
+.popup-content select:focus {
+  border-color: #592b22;
+  box-shadow: 0 0 5px rgba(89, 43, 34, 0.5);
+  outline: none;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 10px;
+}
+
+#save-wallet {
+  background-color: #5cb85c;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#save-wallet:hover {
+  background-color: #4cae4c;
+  transform: translateY(-2px);
+}
+
+#close-popup {
+  background-color: #592b22;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#close-popup:hover {
+  background-color: #4a1f1b;
+  transform: translateY(-2px);
+}
+
+@keyframes popup-slide-in {
+  from {
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .wallet-container {
+    margin: 20px;
+    padding: 30px;
+  }
+  .wallet-title {
+    font-size: 28px;
+  }
+  .wallet-card {
+    padding: 20px;
+  }
+  .popup-content {
+    padding: 30px;
+    width: 90%;
+  }
+  .popup-content h3 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-grid {
+    gap: 15px;
+  }
+  .wallet-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .wallet-actions button {
+    width: 100%;
+  }
+  .popup-content {
+    padding: 20px;
+  }
+}
