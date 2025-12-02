@@ -11,23 +11,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     const profileJson = await profileRes.json();
     const profile = profileJson.data;
 
-    document.getElementById("sidebar-name").textContent =
-      profile.name || "Unknown";
-    document.getElementById("sidebar-email").textContent = profile.email || "";
-    document.getElementById("profile-name").textContent =
-      profile.name || "Unknown";
-    document.getElementById("detail-name").textContent =
-      profile.name || "Unknown";
-    document.getElementById("detail-email").textContent = profile.email || "";
-    document.getElementById("detail-email").href = `mailto:${profile.email}`;
+    const sidebarName = document.getElementById("sidebar-name");
+    if (sidebarName) {
+      sidebarName.textContent = profile.name || "Unknown";
+    }
 
-    const createdAtElem = document.createElement("p");
-    createdAtElem.innerHTML = `<strong>Account Created:</strong> ${new Date(
-      profile.createdAt
-    ).toLocaleDateString()}`;
-    document
-      .querySelector(".profile-details .details")
-      .appendChild(createdAtElem);
+    const sidebarEmail = document.getElementById("sidebar-email");
+    if (sidebarEmail) {
+      sidebarEmail.textContent = profile.email || "";
+    }
+
+    const profileName = document.getElementById("profile-name");
+    if (profileName) {
+      profileName.textContent = profile.name || "Unknown";
+    }
+
+    const detailName = document.getElementById("detail-name");
+    if (detailName) {
+      detailName.textContent = profile.name || "Unknown";
+    }
+
+    const detailEmail = document.getElementById("detail-email");
+    if (detailEmail) {
+      detailEmail.textContent = profile.email || "";
+      detailEmail.href = `mailto:${profile.email}`;
+    }
+
+    const detailsContainer = document.querySelector(
+      ".profile-details .details"
+    );
+    if (detailsContainer) {
+      const createdAtElem = document.createElement("p");
+      createdAtElem.innerHTML = `<strong>Account Created:</strong> ${new Date(
+        profile.createdAt
+      ).toLocaleDateString()}`;
+      detailsContainer.appendChild(createdAtElem);
+    }
   } catch (err) {
     console.error("Profile load error:", err);
   }

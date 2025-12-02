@@ -19,7 +19,7 @@
       <ul class="menu">
         <li><a href="../dashboard/index.html">Dashboard</a></li>
         <li><a href="../profile/index.html">Profile</a></li>
-        <li><a href="#">Expenses</a></li>
+        <li><a href="../expenses/index.html">Expenses</a></li>
         <li><a href="#" class="active">Wallets</a></li>
         <li><a href="#">Summary</a></li>
         <li><a href="#">Accounts</a></li>
@@ -32,7 +32,6 @@
       <h1 class="wallet-title">Wallets</h1>
       <div class="wallet-grid" id="wallet-grid"></div>
 
-      <!-- Popup Overlay -->
       <div class="popup-overlay" id="wallet-popup">
         <div class="popup-content">
           <h3 id="popup-wallet-name">Wallet Details</h3>
@@ -53,6 +52,41 @@
           <div class="popup-buttons">
             <button id="save-wallet">Save</button>
             <button id="close-popup">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup-overlay" id="transfer-popup">
+        <div class="popup-content">
+          <h3>Transfer Money</h3>
+          <p>
+            <strong>From Wallet:</strong> <span id="from-wallet-name"></span>
+          </p>
+          <p>
+            <strong>Current Balance:</strong>
+            <span id="from-wallet-balance"></span>
+          </p>
+
+          <label for="to-wallet-select"><strong>To Wallet:</strong></label>
+          <select id="to-wallet-select"></select>
+
+          <label for="transfer-amount"><strong>Amount:</strong></label>
+          <input
+            type="number"
+            id="transfer-amount"
+            step="0.01"
+            min="0"
+            placeholder="Enter amount"
+          />
+
+          <p>
+            <strong>Converted Amount:</strong>
+            <span id="converted-amount">0.00</span>
+          </p>
+
+          <div class="popup-buttons">
+            <button id="confirm-transfer">Transfer</button>
+            <button id="cancel-transfer">Cancel</button>
           </div>
         </div>
       </div>

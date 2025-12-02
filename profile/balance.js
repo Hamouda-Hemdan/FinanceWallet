@@ -15,7 +15,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const walletsJson = await walletsRes.json();
     const wallets = walletsJson.data || [];
 
-    document.getElementById("total-wallets").textContent = wallets.length;
+    const totalWalletsEl = document.getElementById("total-wallets");
+    if (totalWalletsEl) {
+      totalWalletsEl.textContent = wallets.length;
+    }
 
     const totalRes = await fetch(
       `${CONFIG.BASE_URL}wallets/total-balance?currency=USD`,
@@ -27,22 +30,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     const totalJson = await totalRes.json();
     const totalData = totalJson.data;
 
-    document.getElementById(
-      "total-balance"
-    ).textContent = `${totalData.totalBalance.toFixed(2)}`;
+    const totalBalanceEl = document.getElementById("total-balance");
+    if (totalBalanceEl) {
+      totalBalanceEl.textContent = `${totalData.totalBalance.toFixed(2)}`;
+    }
 
     let totalSavingsUSD = 0;
     totalData.walletBalances.forEach((w) => {
       if (w.walletType === "Savings") totalSavingsUSD += w.convertedBalance;
     });
-    document.getElementById(
-      "total-savings"
-    ).textContent = `${totalSavingsUSD.toFixed(2)}`;
+    
+    const totalSavingsEl = document.getElementById("total-savings");
+    if (totalSavingsEl) {
+      totalSavingsEl.textContent = `${totalSavingsUSD.toFixed(2)}`;
+    }
   } catch (err) {
     console.error("Wallet load error:", err);
-    document.getElementById("total-balance").textContent = "$0.00";
-    document.getElementById("total-wallets").textContent = "0";
-    document.getElementById("total-savings").textContent = "$0.00";
+    
+    const totalBalanceEl = document.getElementById("total-balance");
+    const totalWalletsEl = document.getElementById("total-wallets");
+    const totalSavingsEl = document.getElementById("total-savings");
+    
+    if (totalBalanceEl) totalBalanceEl.textContent = "$0.00";
+    if (totalWalletsEl) totalWalletsEl.textContent = "0";
+    if (totalSavingsEl) totalSavingsEl.textContent = "$0.00";
   }
 
   try {
@@ -60,16 +71,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     const list = document.getElementById("login-history-list");
-    list.innerHTML = "";
+    if (list) {
+      list.innerHTML = "";
 
-    if (loginHistory.length === 0) {
-      list.innerHTML = "<li>No login history</li>";
-    } else {
-      loginHistory.forEach((item) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<span>${item.date}</span><span>${item.time}</span>`;
-        list.appendChild(li);
-      });
+      if (loginHistory.length === 0) {
+        list.innerHTML = "<li>No login history</li>";
+      } else {
+        loginHistory.forEach((item) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<span>${item.date}</span><span>${item.time}</span>`;
+          list.appendChild(li);
+        });
+      }
     }
   } catch (err) {
     console.error("Login history error:", err);

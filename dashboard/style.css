@@ -6,7 +6,6 @@
   padding: 40px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -18,18 +17,243 @@
   color: white;
   border: none;
   border-radius: 25px;
-  font-size: 22px;
+  padding: 10px 20px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 18px;
+  display: block;
+  margin: 0 auto;
+  margin-right: 30px;
   width: 160px;
   height: 48px;
-  margin-top: 60px;
 }
 
+.add-wallet-btn:hover {
+  background-color: #4a1f1b;
+  transform: translateY(-2px);
+}
 .section-title {
   margin-top: 30px;
   font-size: 20px;
   font-weight: 600;
   color: #111;
+}
+.budget-section {
+  margin-top: 30px;
+}
+
+.budget-card {
+  background: #cfcfcf;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.budget-header h4 {
+  color: #592b22;
+  margin-bottom: 5px;
+}
+
+.budget-content {
+  margin-top: 15px;
+}
+
+.budget-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.budget-info p {
+  margin: 5px 0;
+  font-weight: 600;
+}
+
+.budget-info span {
+  color: #592b22;
+}
+
+.budget-progress {
+  margin: 20px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #592b22;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  margin-top: 5px;
+  font-weight: 600;
+  color: #592b22;
+}
+
+.set-budget-btn {
+  background-color: #592b22;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  display: block;
+  margin: 0 auto;
+}
+
+.set-budget-btn:hover {
+  background-color: #4a1f1b;
+  transform: translateY(-2px);
+}
+
+.category-budgets-section {
+  background: #cfcfcf;
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.category-budgets-content {
+  margin-top: 15px;
+}
+
+#category-budgets-list {
+  margin-bottom: 20px;
+}
+
+.category-budget-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e0e0e0;
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.category-budget-info {
+  flex: 1;
+}
+
+.category-budget-info h5 {
+  margin: 0 0 5px 0;
+  color: #592b22;
+  font-size: 16px;
+}
+
+.category-budget-amounts {
+  display: flex;
+  gap: 15px;
+}
+
+.category-budget-amount {
+  font-weight: 600;
+}
+
+.category-budget-progress {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.category-budget-progress-fill {
+  height: 100%;
+  background-color: #592b22;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.category-budget-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-category-budget,
+.delete-category-budget {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px;
+}
+
+.edit-category-budget {
+  color: #592b22;
+}
+
+.delete-category-budget {
+  color: #d9534f;
+}
+
+.no-category-budgets {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  padding: 15px;
+}
+
+.category-budget-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.category-budget-popup-content {
+  background: #d9d9d9;
+  padding: 30px 40px;
+  border-radius: 30px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.category-budget-popup-content h2 {
+  margin-bottom: 15px;
+  color: #592b22;
+}
+
+.category-budget-popup-content label {
+  font-weight: 600;
+  color: #111;
+}
+
+.category-budget-popup-content select,
+.category-budget-popup-content input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid #aaa;
+  margin-bottom: 10px;
+}
+
+.category-budget-popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .overview-section {

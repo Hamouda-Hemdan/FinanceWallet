@@ -19,7 +19,7 @@
       <ul class="menu">
         <li><a href="index.html" class="active">Dashboard</a></li>
         <li><a href="../profile/index.html">Profile</a></li>
-        <li><a href="#">Expenses</a></li>
+        <li><a href="../expenses/index.html">Expenses</a></li>
         <li><a href="../wallet/index.html">Wallets</a></li>
         <li><a href="#">Summary</a></li>
         <li><a href="#">Accounts</a></li>
@@ -32,6 +32,49 @@
       <div class="dashboard-header">
         <h1>Dashboard</h1>
         <button class="add-wallet-btn">+ Wallet</button>
+      </div>
+
+      <div class="budget-section">
+        <h3 class="section-title">Monthly Budget</h3>
+        <div class="budget-card">
+          <div class="budget-header">
+            <h4>Set Monthly Spending Limit</h4>
+            <p class="subtext">Track your expenses to avoid overspending</p>
+          </div>
+          <div class="budget-content">
+            <div class="budget-info">
+              <p>Budget: <span id="budget-amount">$0.00</span></p>
+              <p>Spent: <span id="spent-amount">$0.00</span></p>
+              <p>Remaining: <span id="remaining-amount">$0.00</span></p>
+            </div>
+            <div class="budget-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+              </div>
+              <p class="progress-text" id="progress-text">0% used</p>
+            </div>
+            <button class="set-budget-btn" id="set-budget-btn">
+              Set Overall Budget
+            </button>
+          </div>
+        </div>
+
+        <div class="category-budgets-section">
+          <div class="budget-header">
+            <h4>Category-Specific Budgets</h4>
+            <p class="subtext">Set limits for specific spending categories</p>
+          </div>
+          <div class="category-budgets-content">
+            <div id="category-budgets-list">
+              <p class="no-category-budgets">
+                No category budgets set. Add your first category budget below.
+              </p>
+            </div>
+            <button class="set-budget-btn" id="set-category-budget-btn">
+              + Add Category Budget
+            </button>
+          </div>
+        </div>
       </div>
 
       <h3 class="section-title">Overview</h3>
@@ -52,6 +95,30 @@
           </div>
           <h2 id="savings-balance">Loading...</h2>
         </div>
+      </div>
+    </div>
+
+    <div class="wallet-popup" id="budget-popup">
+      <div class="wallet-popup-content">
+        <h2>Set Monthly Budget</h2>
+        <form id="budget-form">
+          <label for="budget-amount-input">Budget Amount ($):</label>
+          <input
+            type="number"
+            id="budget-amount-input"
+            name="budget-amount"
+            step="0.01"
+            min="0"
+            required
+          />
+
+          <div class="popup-buttons">
+            <button type="submit" class="save-btn">Save</button>
+            <button type="button" class="cancel-btn" id="cancel-budget-popup">
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -87,9 +154,44 @@
       </div>
     </div>
 
+    <div class="category-budget-popup" id="category-budget-popup">
+      <div class="category-budget-popup-content">
+        <h2 id="category-budget-popup-title">Set Category Budget</h2>
+        <form id="category-budget-form">
+          <input type="hidden" id="category-budget-id" value="" />
+          <label for="category-select">Category:</label>
+          <select id="category-select" name="category" required>
+            <option value="">Select Category</option>
+          </select>
+
+          <label for="category-budget-amount-input">Budget Amount ($):</label>
+          <input
+            type="number"
+            id="category-budget-amount-input"
+            name="category-budget-amount"
+            step="0.01"
+            min="0"
+            required
+          />
+
+          <div class="category-budget-popup-buttons">
+            <button type="submit" class="save-btn">Save</button>
+            <button
+              type="button"
+              class="cancel-btn"
+              id="cancel-category-budget-popup"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script src="walletOverview.js"></script>
     <script src="script.js"></script>
     <script src="../profile/script.js"></script>
     <script src="../config.js"></script>
+    <script src="budgetWarnings.js"></script>
   </body>
 </html>

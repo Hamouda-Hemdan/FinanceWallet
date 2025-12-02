@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <p class="wallet-currency">Currency: <span>${wallet.currency}</span></p>
             <p class="wallet-type">Type: <span>${wallet.walletType}</span></p>
             <div class="wallet-actions">
+              <button class="transfer-btn" data-id="${wallet.walletId}" data-name="${wallet.name}" data-balance="${wallet.balance}" data-currency="${wallet.currency}">Transfer</button>
               <button class="edit-btn" data-id="${wallet.walletId}">Edit</button>
               <button class="delete-btn" data-id="${wallet.walletId}">Delete</button>
             </div>
@@ -96,6 +97,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         `
         )
         .join("");
+
+      // Add event listeners for transfer buttons
+      document.querySelectorAll(".transfer-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const walletId = e.target.dataset.id;
+          const walletName = e.target.dataset.name;
+          const walletBalance = e.target.dataset.balance;
+          const walletCurrency = e.target.dataset.currency;
+          openTransferPopup(
+            walletId,
+            walletName,
+            walletBalance,
+            walletCurrency
+          );
+        });
+      });
 
       document.querySelectorAll(".wallet-card").forEach((card) => {
         card.addEventListener("click", async (e) => {
@@ -140,7 +158,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await loadWallets();
 
-  // Open popup (view/edit)
   async function openPopup(walletId, isEditMode) {
     const popup = document.getElementById("wallet-popup");
     try {
@@ -215,5 +232,208 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("wallet-popup").addEventListener("click", (e) => {
     if (e.target.id === "wallet-popup") e.target.classList.remove("active");
+  });
+
+  // Transfer functionality
+  let currentTransferData = {
+    sourceWalletId: null,
+    fromWalletCurrency: null,
+    toWalletCurrency: null,
+  };
+
+  // Open transfer popup
+  async function openTransferPopup(
+    walletId,
+    walletName,
+    walletBalance,
+    walletCurrency
+  ) {
+    const transferPopup = document.getElementById("transfer-popup");
+    const fromWalletName = document.getElementById("from-wallet-name");
+    const fromWalletBalance = document.getElementById("from-wallet-balance");
+    const toWalletSelect = document.getElementById("to-wallet-select");
+
+    fromWalletName.textContent = walletName;
+    fromWalletBalance.textContent = `${walletBalance} ${walletCurrency}`;
+
+    currentTransferData.sourceWalletId = walletId;
+    currentTransferData.fromWalletCurrency = walletCurrency;
+
+    try {
+      const response = await fetch(`${CONFIG.BASE_URL}wallets`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      const data = await response.json();
+      const wallets = Array.isArray(data) ? data : data.data || [];
+
+      // Filter out the current wallet
+      const otherWallets = wallets.filter((w) => w.walletId !== walletId);
+
+      toWalletSelect.innerHTML = "";
+      otherWallets.forEach((wallet) => {
+        const option = document.createElement("option");
+        option.value = wallet.walletId;
+        option.textContent = `${wallet.name} (${wallet.balance} ${wallet.currency})`;
+        option.dataset.currency = wallet.currency;
+        toWalletSelect.appendChild(option);
+      });
+
+      // Set the first wallet as selected by default
+      if (otherWallets.length > 0) {
+        toWalletSelect.selectedIndex = 0;
+        currentTransferData.toWalletCurrency = otherWallets[0].currency;
+        updateConvertedAmount();
+      }
+
+      transferPopup.classList.add("active");
+    } catch (err) {
+      console.error("Error loading wallets for transfer:", err);
+      alert("Failed to load wallets for transfer");
+    }
+  }
+
+  // Handle "to" wallet selection change
+  document
+    .getElementById("to-wallet-select")
+    .addEventListener("change", (e) => {
+      const selectedOption = e.target.options[e.target.selectedIndex];
+      currentTransferData.toWalletCurrency = selectedOption.dataset.currency;
+      updateConvertedAmount();
+    });
+
+  // Handle amount input change
+  document
+    .getElementById("transfer-amount")
+    .addEventListener("input", updateConvertedAmount);
+
+  // Update converted amount display with real exchange rates
+  async function updateConvertedAmount() {
+    const amountInput = document.getElementById("transfer-amount");
+    const convertedAmountDisplay = document.getElementById("converted-amount");
+    const amount = parseFloat(amountInput.value) || 0;
+
+    // Display the amount with currency information
+    if (
+      currentTransferData.fromWalletCurrency ===
+      currentTransferData.toWalletCurrency
+    ) {
+      convertedAmountDisplay.textContent = `${amount.toFixed(2)} ${
+        currentTransferData.toWalletCurrency
+      }`;
+    } else {
+      try {
+        const response = await fetch(
+          `https://api.exchangerate-api.com/v4/latest/${currentTransferData.fromWalletCurrency}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.rates && data.rates[currentTransferData.toWalletCurrency]) {
+            const rate = data.rates[currentTransferData.toWalletCurrency];
+            const convertedAmount = amount * rate;
+            convertedAmountDisplay.textContent = `${amount.toFixed(2)} ${
+              currentTransferData.fromWalletCurrency
+            } = ${convertedAmount.toFixed(2)} ${
+              currentTransferData.toWalletCurrency
+            } (Rate: ${rate.toFixed(4)})`;
+          } else {
+            convertedAmountDisplay.textContent = `${amount.toFixed(2)} ${
+              currentTransferData.fromWalletCurrency
+            } (Cannot get rate for ${currentTransferData.toWalletCurrency})`;
+          }
+        } else {
+          convertedAmountDisplay.textContent = `${amount.toFixed(2)} ${
+            currentTransferData.fromWalletCurrency
+          } (Rate service unavailable)`;
+        }
+      } catch (error) {
+        console.error("Error fetching exchange rate:", error);
+        convertedAmountDisplay.textContent = `${amount.toFixed(2)} ${
+          currentTransferData.fromWalletCurrency
+        } (Rate service error)`;
+      }
+    }
+  }
+
+  // Confirm transfer
+  document
+    .getElementById("confirm-transfer")
+    .addEventListener("click", async () => {
+      const toWalletId = document.getElementById("to-wallet-select").value;
+      const amount = parseFloat(
+        document.getElementById("transfer-amount").value
+      );
+
+      if (!toWalletId) {
+        alert("Please select a destination wallet");
+        return;
+      }
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount greater than zero");
+        return;
+      }
+
+      try {
+        // Prepare transfer data according to API specification
+        const transferData = {
+          sourceWalletId: currentTransferData.sourceWalletId,
+          destinationWalletId: toWalletId,
+          amount: amount,
+        };
+
+        // Send transfer request
+        const response = await fetch(`${CONFIG.BASE_URL}wallets/transfer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(transferData),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          let errorMessage = `Transfer failed: ${errorText}`;
+
+          // Try to parse JSON error response
+          try {
+            const errorObj = JSON.parse(errorText);
+            if (errorObj.message) {
+              errorMessage = `Transfer failed: ${errorObj.message}`;
+            }
+          } catch (e) {
+            // If parsing fails, use the raw error text
+          }
+
+          throw new Error(errorMessage);
+        }
+
+        document.getElementById("transfer-popup").classList.remove("active");
+        alert("Transfer completed successfully!");
+        loadWallets();
+
+        document.getElementById("transfer-amount").value = "";
+        document.getElementById("exchange-rate").value = "";
+      } catch (err) {
+        console.error("Transfer error:", err);
+        alert(`Transfer failed: ${err.message}`);
+      }
+    });
+
+  document.getElementById("cancel-transfer").addEventListener("click", () => {
+    document.getElementById("transfer-popup").classList.remove("active");
+  });
+
+  // Close transfer popup when clicking outside
+  document.getElementById("transfer-popup").addEventListener("click", (e) => {
+    if (e.target.id === "transfer-popup") {
+      e.target.classList.remove("active");
+    }
   });
 });

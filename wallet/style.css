@@ -95,6 +95,23 @@
   transform: translateY(-2px);
 }
 
+.transfer-btn {
+  background-color: #5bc0de;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.transfer-btn:hover {
+  background-color: #31b0d5;
+  transform: translateY(-2px);
+}
+
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -147,6 +164,19 @@
   color: #4a1f1b;
 }
 
+#from-wallet-name,
+#from-wallet-balance {
+  color: #592b22;
+  font-weight: 700;
+}
+
+.popup-content label {
+  display: block;
+  font-weight: 600;
+  color: #4a1f1b;
+  margin: 15px 0 5px;
+}
+
 .popup-content input,
 .popup-content select {
   width: 100%;
@@ -166,11 +196,29 @@
   outline: none;
 }
 
+
+#transfer-amount {
+  font-weight: 600;
+  border: 2px solid #5bc0de;
+}
+
+
+#converted-amount {
+  font-weight: 700;
+  color: #592b22;
+  font-size: 18px;
+}
+
 .popup-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
-  gap: 10px;
+  gap: 15px;
+}
+
+.popup-buttons button {
+  flex: 1;
+  text-align: center;
 }
 
 #save-wallet {
@@ -178,7 +226,7 @@
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 10px 24px;
+  padding: 12px 24px;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
@@ -194,7 +242,7 @@
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 10px 24px;
+  padding: 12px 24px;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
@@ -202,6 +250,39 @@
 
 #close-popup:hover {
   background-color: #4a1f1b;
+  transform: translateY(-2px);
+}
+
+
+#confirm-transfer {
+  background-color: #5bc0de;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#confirm-transfer:hover {
+  background-color: #31b0d5;
+  transform: translateY(-2px);
+}
+
+#cancel-transfer {
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#cancel-transfer:hover {
+  background-color: #c9302c;
   transform: translateY(-2px);
 }
 

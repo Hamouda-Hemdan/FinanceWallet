@@ -29,4 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  
+  // Initialize category budget display if on dashboard page
+  if (typeof window.loadCategoryBudgets === 'function') {
+    window.loadCategoryBudgets();
+  }
 });
