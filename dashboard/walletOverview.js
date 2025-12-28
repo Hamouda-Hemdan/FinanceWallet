@@ -701,4 +701,430 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   loadBudgetData();
   fetchWalletBalances();
+
+  // Wait for Chart.js to be fully loaded
+  const waitForChart = setInterval(() => {
+    if (typeof Chart !== "undefined") {
+      clearInterval(waitForChart);
+      loadExpenseChartData();
+    }
+  }, 100);
+
+  // Fallback in case Chart.js doesn't load
+  setTimeout(() => {
+    if (typeof Chart === "undefined") {
+      clearInterval(waitForChart);
+      console.warn("Chart.js did not load in time");
+    }
+  }, 3000);
 });
+
+// Add this function to load and display expense chart data
+async function loadExpenseChartData() {
+  try {
+    console.log("Loading expense chart data...");
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("User not logged in, skipping expense chart load");
+      return;
+    }
+
+    // Check if Chart.js is available
+    if (typeof Chart === "undefined") {
+      console.error("Chart.js is not available");
+      return;
+    }
+
+    // Fetch transactions from the last 30 days
+    const response = await fetch(
+      `${CONFIG.BASE_URL}api/transactions?page=1&pageSize=1000`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch transactions: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    let transactions = [];
+    if (Array.isArray(data)) {
+      transactions = data;
+    } else if (data.data) {
+      if (Array.isArray(data.data)) {
+        transactions = data.data;
+      } else if (data.data.items) {
+        transactions = Array.isArray(data.data.items) ? data.data.items : [];
+      } else if (data.data.transactions) {
+        transactions = Array.isArray(data.data.transactions)
+          ? data.data.transactions
+          : [];
+      }
+    }
+
+    console.log("Fetched transactions:", transactions.length);
+
+    // Filter for expenses in the current month
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const currentMonthExpenses = transactions.filter((transaction) => {
+      if (transaction.type !== "Expense") return false;
+
+      const transactionDate = new Date(
+        transaction.createdAt || transaction.date
+      );
+      return (
+        transactionDate.getMonth() === currentMonth &&
+        transactionDate.getFullYear() === currentYear
+      );
+    });
+
+    console.log("Current month expenses:", currentMonthExpenses.length);
+
+    // Aggregate expenses by category
+    const categoryExpenses = {};
+    currentMonthExpenses.forEach((transaction) => {
+      const category = transaction.category || "Uncategorized";
+      const amount = parseFloat(transaction.amount || 0);
+
+      if (!categoryExpenses[category]) {
+        categoryExpenses[category] = 0;
+      }
+      categoryExpenses[category] += amount;
+    });
+
+    console.log("Category expenses:", categoryExpenses);
+
+    // Display the top 3 expense categories
+    displayTop3Expenses(categoryExpenses);
+
+    // Display the chart
+    displayExpenseChart(categoryExpenses);
+  } catch (error) {
+    console.error("Error loading expense chart data:", error);
+    // Show error message in the chart area
+    const noDataMessage = document.getElementById("no-expense-data");
+    if (noDataMessage) {
+      noDataMessage.innerHTML =
+        "<p>Error loading expense data. Please try refreshing the page.</p>";
+      noDataMessage.style.display = "block";
+    }
+  }
+}
+
+// Add this function to display the top 3 expense categories
+function displayTop3Expenses(categoryExpenses) {
+  try {
+    // Convert object to array and sort by amount (descending)
+    const sortedCategories = Object.entries(categoryExpenses)
+      .map(([category, amount]) => ({ category, amount }))
+      .sort((a, b) => b.amount - a.amount);
+
+    // Get top 3 categories (or fewer if less than 3 exist)
+    const top3 = sortedCategories.slice(0, 3);
+
+    // Update the UI for each top expense item
+    for (let i = 1; i <= 3; i++) {
+      const itemElement = document.getElementById(`top-expense-${i}`);
+      if (itemElement) {
+        if (i <= top3.length) {
+          // Update with actual data
+          const categoryData = top3[i - 1];
+          itemElement.querySelector(".category").textContent =
+            categoryData.category;
+          itemElement.querySelector(
+            ".amount"
+          ).textContent = `$${categoryData.amount.toFixed(2)}`;
+          itemElement.style.display = "flex";
+        } else {
+          // Hide unused slots
+          itemElement.style.display = "none";
+        }
+      }
+    }
+
+    // If no expenses, hide the entire section
+    const topExpensesSection = document.querySelector(".top-expenses-section");
+    if (topExpensesSection && sortedCategories.length === 0) {
+      topExpensesSection.style.display = "none";
+    } else if (topExpensesSection) {
+      topExpensesSection.style.display = "block";
+    }
+  } catch (error) {
+    console.error("Error displaying top 3 expenses:", error);
+  }
+}
+
+// Add this function to display the expense chart
+function displayExpenseChart(categoryExpenses) {
+  try {
+    console.log("Displaying expense chart with data:", categoryExpenses);
+
+    const ctx = document.getElementById("expenseChart");
+    const noDataMessage = document.getElementById("no-expense-data");
+    const chartTypeSelector = document.getElementById("chart-type");
+
+    // Check if canvas element exists
+    if (!ctx) {
+      console.error("Canvas element not found");
+      return;
+    }
+
+    // Check if Chart.js is available
+    if (typeof Chart === "undefined") {
+      console.error("Chart.js is not loaded properly");
+      if (noDataMessage) {
+        noDataMessage.innerHTML =
+          "<p>Chart library not available. Showing data as list:<br/>" +
+          Object.entries(categoryExpenses)
+            .map(([category, amount]) => `${category}: $${amount.toFixed(2)}`)
+            .join("<br/>") +
+          "</p>";
+        noDataMessage.style.display = "block";
+      }
+      ctx.style.display = "none";
+      return;
+    }
+
+    // Check if there's any data to display
+    const hasData = Object.keys(categoryExpenses).length > 0;
+
+    if (!hasData) {
+      ctx.style.display = "none";
+      if (noDataMessage) noDataMessage.style.display = "block";
+      return;
+    }
+
+    ctx.style.display = "block";
+    if (noDataMessage) noDataMessage.style.display = "none";
+
+    // Prepare data for chart
+    const categories = Object.keys(categoryExpenses);
+    const amounts = Object.values(categoryExpenses);
+
+    const backgroundColors = categories.map((_, index) => {
+      // Create different shades of #592b22 by adjusting lightness
+      const lightness = 30 + (index % 5) * 10;
+      const opacity = 0.7 + (index % 3) * 0.1;
+      return `hsla(15, 55%, ${lightness}%, ${opacity})`;
+    });
+
+    // For borders, use the solid primary color with varying opacities
+    const borderColors = categories.map((_, index) => {
+      const opacity = 0.8 + (index % 2) * 0.2;
+      return `rgba(89, 43, 34, ${opacity})`;
+    });
+
+    // Get selected chart type
+    const chartType = chartTypeSelector ? chartTypeSelector.value : "pie";
+
+    // Destroy existing chart if it exists and is a Chart instance
+    if (window.expenseChart) {
+      if (typeof window.expenseChart.destroy === "function") {
+        window.expenseChart.destroy();
+      } else {
+        delete window.expenseChart;
+      }
+    }
+
+    // Chart configuration based on selected type
+    const chartConfig = {
+      type: chartType,
+      data: {
+        labels: categories,
+        datasets: [
+          {
+            label: "Expenses by Category",
+            data: amounts,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "top",
+            labels: {
+              // Use the primary color for legend text
+              color: "#592b22",
+              font: {
+                size: 12,
+                weight: "bold",
+              },
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const label = context.label || "";
+                const value = context.raw || 0;
+                return `${label}: $${value.toFixed(2)}`;
+              },
+            },
+            // Style the tooltips to match the theme
+            backgroundColor: "rgba(89, 43, 34, 0.9)",
+            titleColor: "#ffffff",
+            bodyColor: "#ffffff",
+            borderColor: "#592b22",
+            borderWidth: 2,
+            titleFont: {
+              weight: "bold",
+            },
+          },
+        },
+      },
+    };
+
+    // Adjust options based on chart type
+    if (chartType === "bar") {
+      chartConfig.options.scales = {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function (value) {
+              return "$" + value;
+            },
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+          grid: {
+            color: "rgba(89, 43, 34, 0.2)",
+            drawBorder: true,
+          },
+          title: {
+            display: true,
+            text: "Amount ($)",
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+        },
+        x: {
+          ticks: {
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+          grid: {
+            color: "rgba(89, 43, 34, 0.1)",
+            drawBorder: true,
+          },
+          title: {
+            display: true,
+            text: "Categories",
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+        },
+      };
+    } else if (chartType === "line") {
+      chartConfig.options.scales = {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function (value) {
+              return "$" + value;
+            },
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+          grid: {
+            color: "rgba(89, 43, 34, 0.2)",
+            drawBorder: true,
+          },
+          title: {
+            display: true,
+            text: "Amount ($)",
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+        },
+        x: {
+          ticks: {
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+          grid: {
+            color: "rgba(89, 43, 34, 0.1)",
+            drawBorder: true,
+          },
+          title: {
+            display: true,
+            text: "Categories",
+            color: "#592b22",
+            font: {
+              weight: "bold",
+            },
+          },
+        },
+      };
+      chartConfig.data.datasets[0].fill = false;
+      chartConfig.data.datasets[0].borderWidth = 4;
+      chartConfig.data.datasets[0].pointRadius = 6;
+      chartConfig.data.datasets[0].pointHoverRadius = 10;
+      // Use monochromatic colors for line and points
+      chartConfig.data.datasets[0].backgroundColor = backgroundColors[0];
+      chartConfig.data.datasets[0].borderColor = "#592b22";
+      chartConfig.data.datasets[0].pointBackgroundColor = "#592b22";
+      chartConfig.data.datasets[0].pointBorderColor = "#ffffff";
+      chartConfig.data.datasets[0].pointBorderWidth = 2;
+    } else if (chartType === "doughnut" || chartType === "pie") {
+      chartConfig.options.plugins.legend.position = "right";
+      // Add a subtle border to pie/doughnut segments
+      chartConfig.data.datasets[0].borderAlign = "center";
+    }
+
+    window.expenseChart = new Chart(ctx, chartConfig);
+
+    console.log("Chart created successfully");
+  } catch (error) {
+    console.error("Error displaying expense chart:", error);
+    const noDataMessage = document.getElementById("no-expense-data");
+    if (noDataMessage) {
+      noDataMessage.innerHTML =
+        "<p>Error displaying chart. Please refresh the page.</p>";
+      noDataMessage.style.display = "block";
+    }
+  }
+}
+
+// Add event listener for chart type selector
+document.addEventListener("DOMContentLoaded", function () {
+  const chartTypeSelector = document.getElementById("chart-type");
+  if (chartTypeSelector) {
+    chartTypeSelector.addEventListener("change", function () {
+      if (typeof window.loadExpenseChartData === "function") {
+        window.loadExpenseChartData();
+      }
+    });
+  }
+});
+
+// Make the functions available globally
+window.loadExpenseChartData = loadExpenseChartData;
+window.displayTop3Expenses = displayTop3Expenses;

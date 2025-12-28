@@ -33,7 +33,46 @@
         <h1>Dashboard</h1>
         <button class="add-wallet-btn">+ Wallet</button>
       </div>
-
+      <div class="chart-section">
+        <div class="chart-header">
+          <h3 class="section-title">Expense Distribution by Category</h3>
+          <div class="chart-type-selector">
+            <label for="chart-type">Chart Type:</label>
+            <select id="chart-type">
+              <option value="pie">Pie Chart</option>
+              <option value="doughnut">Doughnut Chart</option>
+              <option value="bar">Column Chart</option>
+              <option value="line">Line Chart</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="expenseChart"></canvas>
+          <div id="no-expense-data" class="no-data-message">
+            <p>No expense data available for the current month.</p>
+          </div>
+        </div>
+      </div>
+      <div class="top-expenses-section">
+        <h3 class="section-title">Top 3 Expense Categories This Month</h3>
+        <div class="top-expenses-container">
+          <div class="top-expense-item" id="top-expense-1">
+            <div class="rank">1</div>
+            <div class="category">-</div>
+            <div class="amount">$0.00</div>
+          </div>
+          <div class="top-expense-item" id="top-expense-2">
+            <div class="rank">2</div>
+            <div class="category">-</div>
+            <div class="amount">$0.00</div>
+          </div>
+          <div class="top-expense-item" id="top-expense-3">
+            <div class="rank">3</div>
+            <div class="category">-</div>
+            <div class="amount">$0.00</div>
+          </div>
+        </div>
+      </div>
       <div class="budget-section">
         <h3 class="section-title">Monthly Budget</h3>
         <div class="budget-card">
@@ -96,6 +135,9 @@
           <h2 id="savings-balance">Loading...</h2>
         </div>
       </div>
+
+    
+
     </div>
 
     <div class="wallet-popup" id="budget-popup">
@@ -193,5 +235,6 @@
     <script src="../profile/script.js"></script>
     <script src="../config.js"></script>
     <script src="budgetWarnings.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </body>
 </html>

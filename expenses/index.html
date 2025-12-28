@@ -24,7 +24,6 @@
         <li><a href="#">Summary</a></li>
         <li><a href="#">Accounts</a></li>
         <li><a href="#">Settings</a></li>
-        <li><a href="#" id="logout-btn">Logout</a></li>
       </ul>
     </div>
 
@@ -34,62 +33,157 @@
       <div class="expense-form-section">
         <h3 class="section-title">Add New Transaction</h3>
         <form id="expense-form" class="expense-form">
-          <div class="form-group wallet">
-            <label for="expense-wallet">Wallet:</label>
-            <select id="expense-wallet" required>
-              <option value="">Select Wallet</option>
-            </select>
-          </div>
+          <div class="form-grid">
+            <div class="form-group wallet">
+              <label for="expense-wallet">Wallet:</label>
+              <select id="expense-wallet" required>
+                <option value="">Select Wallet</option>
+              </select>
+            </div>
 
-          <div class="form-group type">
-            <label for="transaction-type">Transaction Type:</label>
-            <select id="transaction-type" required>
-              <option value="">Select Type</option>
-            </select>
-          </div>
+            <div class="form-group type">
+              <label for="transaction-type">Transaction Type:</label>
+              <select id="transaction-type" required>
+                <option value="">Select Type</option>
+              </select>
+            </div>
 
-          <div class="form-group amount">
-            <label for="expense-amount">Amount ($):</label>
-            <input
-              type="number"
-              id="expense-amount"
-              step="0.01"
-              min="0"
-              required
-            />
-          </div>
+            <div class="form-group amount">
+              <label for="expense-amount">Amount ($):</label>
+              <input
+                type="number"
+                id="expense-amount"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
 
-          <div class="form-group category">
-            <label for="expense-category">Category:</label>
-            <select id="expense-category" required>
-              <option value="">Select Category</option>
-            </select>
-          </div>
+            <div class="form-group category">
+              <label for="expense-category">Category:</label>
+              <select id="expense-category" required>
+                <option value="">Select Category</option>
+              </select>
+            </div>
 
-          <div class="form-group description">
-            <label for="expense-description">Description:</label>
-            <input
-              type="text"
-              id="expense-description"
-              placeholder="What was this transaction for?"
-            />
-          </div>
+            <div class="form-group description">
+              <label for="expense-description">Description:</label>
+              <input
+                type="text"
+                id="expense-description"
+                placeholder="What was this transaction for?"
+              />
+            </div>
 
-          <div class="form-group date">
-            <label for="expense-date">Date:</label>
-            <input type="date" id="expense-date" required />
-          </div>
+            <div class="form-group date">
+              <label for="expense-date">Date:</label>
+              <input type="date" id="expense-date" required />
+            </div>
 
-          <div class="form-group submit">
-            <button type="submit" class="add-expense-btn">
-              Add Transaction
-            </button>
+            <div class="form-group receipt">
+              <label for="receipt-file">Receipt (optional):</label>
+              <input type="file" id="receipt-file" accept="image/*" />
+              <small>Upload a photo of your receipt</small>
+            </div>
+
+            <div class="form-group submit">
+              <button type="submit" class="add-expense-btn">
+                Add Transaction
+              </button>
+            </div>
           </div>
         </form>
       </div>
 
       <div class="expenses-list-section">
         <h3 class="section-title">Recent Transactions</h3>
+
+        <div class="search-filter-section">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="search-term">Search:</label>
+              <input
+                type="text"
+                id="search-term"
+                placeholder="Description, category, or tags..."
+              />
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-category">Category:</label>
+              <select id="filter-category">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-type">Type:</label>
+              <select id="filter-type">
+                <option value="">All Types</option>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="min-amount">Min Amount:</label>
+              <input
+                type="number"
+                id="min-amount"
+                placeholder="0"
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div class="filter-group">
+              <label for="max-amount">Max Amount:</label>
+              <input
+                type="number"
+                id="max-amount"
+                placeholder="Any"
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-date-from">Date From:</label>
+              <input type="date" id="filter-date-from" />
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-date-to">Date To:</label>
+              <input type="date" id="filter-date-to" />
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button id="apply-filters" class="filter-btn">Apply Filters</button>
+            <button id="clear-filters" class="filter-btn clear-btn">
+              Clear Filters
+            </button>
+          </div>
+        </div>
+
+        <div class="pdf-download-section">
+          <div class="date-range-selector">
+            <div class="date-input-group">
+              <label for="start-date">From:</label>
+              <input type="date" id="start-date" class="date-input" />
+            </div>
+            <div class="date-input-group">
+              <label for="end-date">To:</label>
+              <input type="date" id="end-date" class="date-input" />
+            </div>
+          </div>
+          <button id="download-pdf" class="download-pdf-btn">
+            Download Transactions as PDF
+          </button>
+        </div>
+
         <div class="expenses-list" id="expenses-list">
           <p class="no-expenses">No transactions recorded yet.</p>
         </div>
@@ -104,10 +198,17 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../config.js"></script>
     <script src="../dashboard/walletOverview.js"></script>
     <script src="../profile/script.js"></script>
-    <script src="../config.js"></script>
     <script src="../dashboard/budgetWarnings.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="modules/api.js"></script>
+    <script src="modules/transactions.js"></script>
+    <script src="modules/filtering.js"></script>
+    <script src="modules/pdf.js"></script>
+    <script src="modules/ui.js"></script>
+    <script src="modules/main.js"></script>
   </body>
 </html>
